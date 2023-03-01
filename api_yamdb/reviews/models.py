@@ -35,3 +35,5 @@ class Review(models.Model):
 
 class Comment(models.Model):
     """Модель - комментарии к отзывам."""
+
+# Создал комментарий для commit
