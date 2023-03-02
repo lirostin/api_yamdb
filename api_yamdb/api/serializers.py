@@ -5,6 +5,7 @@ from reviews.models import User, validate_username
 
 
 USER_NAME_MAX_LENGTH = 150
+EMAIL_MAX_LENGTH = 254
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -27,3 +28,22 @@ class UserSerializer(serializers.ModelSerializer):
             'bio',
             'role',
         )
+
+
+class TokenSerializer(serializers.Serializer):
+    username = serializers.CharField(
+        max_length=USER_NAME_MAX_LENGTH,
+        required=True,
+        validators=[validate_username]
+    )
+    confirmation_code = serializers.CharField(required=True)
+
+
+class SignUpUserSerializer(serializers.Serializer):
+    email = serializers.EmailField(
+        max_length=EMAIL_MAX_LENGTH
+    )
+    username = serializers.CharField(
+        max_length=EMAIL_MAX_LENGTH,
+        validators=[validate_username]
+    )

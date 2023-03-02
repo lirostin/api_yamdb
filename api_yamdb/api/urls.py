@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework.routers import SimpleRouter
 
-from api.views import UserViewSet
+from api.views import UserViewSet, signup_user, get_token
 
 router = SimpleRouter()
 
@@ -11,7 +11,10 @@ router.register(
     basename='users'
 )
 
-auth_patterns = []
+auth_patterns = [
+    path('signup/', signup_user),
+    path('token/', get_token),
+]
 
 urlpatterns = [
     path('v1/auth/', include(auth_patterns)),
