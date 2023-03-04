@@ -8,9 +8,10 @@ from reviews.models import Genre
 
 class GenreViewSet(ListCreateDestroyViewSet):
     """ Вывод списка всех жанров. """
+
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     permission_classes = (IsAdminUserOrReadOnly,)
     filter_backends = [filters.SearchFilter]
-    search_fields = ("name",)
-    lookup_field = "slug"
+    search_fields = ('name',)
+    lookup_field = 'slug'
