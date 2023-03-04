@@ -1,10 +1,25 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, viewsets
+from rest_framework import filters
 
 from api.mixins import ListCreateDestroyViewSet
 from api.permissions import IsAdminUserOrReadOnly
-from api.serializers import CommentSerializers, GenreSerializer
+
+from api.serializers import CategorySerializer, GenreSerializer, CommentSerializers
 from reviews.models import Genre, Review
+
+from reviews.models import Category, Genre
+
+
+class CategoryViewSet(ListCreateDestroyViewSet):
+    """ Вывод списка всех категорий. """
+
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = (IsAdminUserOrReadOnly,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
+    lookup_field = 'slug'
 
 
 class GenreViewSet(ListCreateDestroyViewSet):
