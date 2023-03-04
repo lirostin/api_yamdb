@@ -20,6 +20,25 @@ class Category(models.Model):
 class Genre(models.Model):
     """Модель жанров произведений."""
 
+    name = models.CharField(
+        'имя жанра',
+        max_length=50
+    )
+    slug = models.SlugField(
+        'cлаг жанра',
+        unique=True,
+        max_length=50,
+        db_index=True
+    )
+
+    class Meta:
+        ordering = ('name',)
+        verbose_name = 'Жанр'
+        verbose_name_plural = 'Жанры'
+
+    def __str__(self):
+        return f'{self.name} {self.name}'
+
 
 class Title(models.Model):
     """Модель произведений."""
@@ -35,5 +54,3 @@ class Review(models.Model):
 
 class Comment(models.Model):
     """Модель - комментарии к отзывам."""
-
-# Создал комментарий для commit
