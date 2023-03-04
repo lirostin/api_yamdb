@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-
 ADMIN = 'admin'
 MODERATOR = 'moderator'
 USER = 'user'
@@ -37,7 +36,7 @@ class Genre(models.Model):
         verbose_name_plural = 'Жанры'
 
     def __str__(self):
-        return f'{self.name} {self.name}'
+        return f'{self.name}'
 
 
 class Title(models.Model):
@@ -55,7 +54,7 @@ class Review(models.Model):
 class Comment(models.Model):
     """Модель - комментарии к отзывам."""
 
-    text = models.TextField(verbose_name='text')
+    text = models.TextField(verbose_name='Текст')
     review = models.ForeignKey(
         Review,
         on_delete=models.CASCADE,

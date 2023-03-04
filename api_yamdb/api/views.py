@@ -1,10 +1,10 @@
-from rest_framework import filters, viewsets
 from django.shortcuts import get_object_or_404
+from rest_framework import filters, viewsets
 
-from reviews.models import Genre, Review
 from api.mixins import ListCreateDestroyViewSet
 from api.permissions import IsAdminUserOrReadOnly
-from api.serializers import GenreSerializer, CommentSerializers
+from api.serializers import CommentSerializers, GenreSerializer
+from reviews.models import Genre, Review
 
 
 class GenreViewSet(ListCreateDestroyViewSet):
