@@ -27,8 +27,21 @@ class GenreAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
+@admin.register(Title)
+class TitleAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'name',
+        'year',
+        'category',
+        'description',
+    )
+    search_fields = ('name',)
+    list_filter = ('name',)
+    empty_value_display = '-пусто-'
+
+
 admin.site.register(Review)
 admin.site.register(Comment)
-admin.site.register(Title)
 admin.site.register(GenreTitle)
 admin.site.register(User)
