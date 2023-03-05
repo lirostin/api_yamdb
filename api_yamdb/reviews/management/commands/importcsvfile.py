@@ -45,7 +45,7 @@ class Command(BaseCommand):
             path, model = i
             rows = 0
             successful = 0
-            print(f'Заполняем модель {model.__name__}')
+            print(f'Модель {model.__name__}')
             with open(path, encoding='utf-8', mode='r') as file:
                 csv_read = csv.DictReader(file)
                 for row in csv_read:
@@ -58,5 +58,5 @@ class Command(BaseCommand):
                         print(f'ОШИБКА: в строке {row.get("id")}.\n'
                               f'Текст - {error}')
             print(f'Заполнение модели {model.__name__} завершено. '
-                  f'Строк: {rows}. Успешно: {successful}.',
+                  f'Из {rows} успешно {successful}.',
                   )
