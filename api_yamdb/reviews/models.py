@@ -1,7 +1,4 @@
-import re
-
 from django.contrib.auth.models import AbstractUser
-from django.core.exceptions import ValidationError
 from django.db import models
 
 from reviews.validators import validate_username
@@ -11,18 +8,6 @@ MODERATOR = 'moderator'
 USER = 'user'
 
 ROLE_CHOICES = [(ADMIN, ADMIN), (MODERATOR, MODERATOR), (USER, USER), ]
-
-
-def validate_username(value):
-    """Проверка на недопустимые username."""
-    if value.lower() == 'me':
-        raise ValidationError('"me" - Недопустимое имя пользователя.')
-
-    if re.search(r'^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$', value) is None:
-        raise ValidationError(
-            (f'Недопустимый набор символов: "{value}"'),
-            params={'value': value},
-        )
 
 
 class User(AbstractUser):
