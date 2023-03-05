@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 
-from reviews.models import Category, Genre, Title
+from reviews.models import Category, Comment, Genre, Title
 from reviews.validator import validator_year
 
 
@@ -91,3 +91,23 @@ class ReadOnlyTitleSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'year', 'rating', 'description', 'genre', 'category'
         )
+
+
+class CommentSerializers(serializers.ModelSerializer):
+    """Серилизатор для комментариев отзывов."""
+
+    author = serializers.SlugRelatedField(
+        slug_field='username',
+        read_only=True,
+        default=serializers.CurrentUserDefault(),
+    )
+
+    class Meta:
+        model = Comment
+        fields = (
+            'id',
+            'text',
+            'author',
+            'pub_date'
+        )
+        read_only_fields = ('author', )

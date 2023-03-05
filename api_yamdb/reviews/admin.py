@@ -42,6 +42,18 @@ class TitleAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Review)
+admin.site.register(User)
 admin.site.register(Comment)
 admin.site.register(GenreTitle)
-admin.site.register(User)
+
+
+# @admin.register(Comment)
+# class CommentAdmin(admin.ModelAdmin):
+#     list_display = (
+#         'id',
+#         'review',
+#         'author',
+#         'pub_date',
+#     )
+#     list_filter = ('author',)
+#     empty_value_display = '-пусто-'
