@@ -6,11 +6,13 @@ from django.db import models
 
 from reviews.validator import validator_year
 
+
 ADMIN = 'admin'
 MODERATOR = 'moderator'
 USER = 'user'
 
 ROLE_CHOICES = [(ADMIN, ADMIN), (MODERATOR, MODERATOR), (USER, USER), ]
+
 
 def validate_username(value):
     """Проверка на недопустимые username."""
@@ -62,6 +64,20 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь',
         verbose_name_plural = 'Пользователи'
+    
+    @property
+    def is_moderator(self):
+        return self.role == MODERATOR
+
+    @property
+    def is_admin(self):
+        return (
+            self.role == ADMIN
+            or self.is_superuser
+        )
+    @property
+    def is_user(self):
+        return self.role == USER
 
 
 class Category(models.Model):

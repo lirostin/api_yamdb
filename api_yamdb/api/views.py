@@ -5,7 +5,8 @@ from rest_framework import filters, viewsets
 
 from api.filters import TitleFilter
 from api.mixins import ListCreateDestroyViewSet
-from api.permissions import IsAdminUserOrReadOnly
+from api.permissions import (IsAdmin, IsAdminUserOrReadOnly,
+                             IsAuthorModerAdminOrReadOnly)
 from api.serializers import (CategorySerializer, CommentSerializers,
                              GenreSerializer, ReadOnlyTitleSerializer,
                              TitleSerializer, UserSerializer)
@@ -14,9 +15,10 @@ from reviews.models import Category, Genre, Review, Title, User
 
 class UserViewSet(viewsets.ModelViewSet):
     """ Пользователь."""
+
     http_method_names = ['get', 'post', 'head', 'delete', 'patch']
     queryset = User.objects.all()
-    permission_classes = ()
+    permission_classes = (IsAdmin,)
     serializer_class = UserSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('username',)

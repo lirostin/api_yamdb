@@ -1,3 +1,4 @@
+from api.views import UserViewSet
 from django.urls import include, path
 from rest_framework.routers import SimpleRouter
 
@@ -28,3 +29,4 @@ urlpatterns = [
     path('v1/auth/', include(auth_patterns)),
     path('v1/', include(router_v1.urls), name='api'),
 ]
+
