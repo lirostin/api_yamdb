@@ -148,7 +148,7 @@ dmypy.json
 # папки со статикой и медиа
 media/
 
- pyproject.toml
+# дополнительные
 Makefile
-
+pyproject.toml
 .isort.cfg
