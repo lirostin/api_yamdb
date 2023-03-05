@@ -6,6 +6,12 @@ from django.db import models
 
 from reviews.validator import validator_year
 
+ADMIN = 'admin'
+MODERATOR = 'moderator'
+USER = 'user'
+
+ROLE_CHOICES = [(ADMIN, ADMIN), (MODERATOR, MODERATOR), (USER, USER), ]
+
 def validate_username(value):
     """Проверка на недопустимые username."""
     if value.lower() == 'me':

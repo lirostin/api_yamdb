@@ -6,9 +6,10 @@ from rest_framework import filters, viewsets
 from api.filters import TitleFilter
 from api.mixins import ListCreateDestroyViewSet
 from api.permissions import IsAdminUserOrReadOnly
-from api.serializers import (CategorySerializer, GenreSerializer, UserSerializer,
-                             ReadOnlyTitleSerializer, TitleSerializer, CommentSerializers)
-from reviews.models import Category, Genre, Title, Review, User
+from api.serializers import (CategorySerializer, CommentSerializers,
+                             GenreSerializer, ReadOnlyTitleSerializer,
+                             TitleSerializer, UserSerializer)
+from reviews.models import Category, Genre, Review, Title, User
 
 
 class UserViewSet(viewsets.ModelViewSet):
