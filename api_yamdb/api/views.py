@@ -1,8 +1,8 @@
 from http import HTTPStatus
 
 from django.contrib.auth.tokens import default_token_generator
-from django.db import IntegrityError
 from django.core.mail import send_mail
+from django.db import IntegrityError
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -18,7 +18,8 @@ from api.permissions import (IsAdmin, IsAdminUserOrReadOnly,
                              IsAuthorModerAdminOrReadOnly)
 from api.serializers import (CategorySerializer, CommentSerializers,
                              GenreSerializer, ReadOnlyTitleSerializer,
-                             TitleSerializer, UserSerializer, SignUpUserSerializer, TokenSerializer,)
+                             SignUpUserSerializer, TitleSerializer,
+                             TokenSerializer, UserSerializer)
 from reviews.models import Category, Genre, Review, Title, User
 
 

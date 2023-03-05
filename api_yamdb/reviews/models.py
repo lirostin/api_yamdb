@@ -1,10 +1,10 @@
+import re
+
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
 
 from reviews.validator import validator_year
-
-
 from reviews.validators import validate_username
 
 ADMIN = 'admin'
