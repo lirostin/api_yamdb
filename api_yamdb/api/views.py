@@ -1,15 +1,12 @@
 from django.db.models import Avg
 from django_filters.rest_framework import DjangoFilterBackend
-
 from rest_framework import filters, viewsets
 
 from api.filters import TitleFilter
 from api.mixins import ListCreateDestroyViewSet
 from api.permissions import IsAdminUserOrReadOnly
-from api.serializers import (CategorySerializer,
-                             GenreSerializer,
-                             ReadOnlyTitleSerializer,
-                             TitleSerializer)
+from api.serializers import (CategorySerializer, GenreSerializer,
+                             ReadOnlyTitleSerializer, TitleSerializer)
 from reviews.models import Category, Genre, Title
 
 
