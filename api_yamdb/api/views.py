@@ -2,24 +2,20 @@ from http import HTTPStatus
 
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from rest_framework import filters, viewsets, serializers, status
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.response import Response
-from rest_framework.decorators import action, api_view, permission_classes
-from rest_framework_simplejwt.tokens import AccessToken
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
+from rest_framework import filters, serializers, status, viewsets
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import AccessToken
 
+from api.permissions import (IsAdmin, IsAdminUserOrReadOnly,
+                             IsAuthorModerAdminOrReadOnly)
+from api.serializers import (SignUpUserSerializer, TokenSerializer,
+                             UserSerializer)
 from reviews.models import User
-from api.serializers import (
-    UserSerializer,
-    TokenSerializer,
-    SignUpUserSerializer
-)
-from api.permissions import (
-    IsAdmin, IsAdminUserOrReadOnly,
-    IsAuthorModerAdminOrReadOnly
-)
+
 
 class UserViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'head', 'delete', 'patch']

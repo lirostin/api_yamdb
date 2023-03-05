@@ -4,13 +4,10 @@ from rest_framework.validators import UniqueValidator
 from reviews.models import User, validate_username
 
 
-USER_NAME_MAX_LENGTH = 150
-EMAIL_MAX_LENGTH = 254
-
-
 class UserSerializer(serializers.ModelSerializer):
+    """ Пользователь."""
     username = serializers.CharField(
-        max_length=USER_NAME_MAX_LENGTH,
+        max_length=150,
         required=True,
         validators=[
             validate_username,
@@ -31,8 +28,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class TokenSerializer(serializers.Serializer):
+    """ Токен."""
     username = serializers.CharField(
-        max_length=USER_NAME_MAX_LENGTH,
+        max_length=150,
         required=True,
         validators=[validate_username]
     )
@@ -40,10 +38,11 @@ class TokenSerializer(serializers.Serializer):
 
 
 class SignUpUserSerializer(serializers.Serializer):
+    """ Регистрация."""
     email = serializers.EmailField(
-        max_length=EMAIL_MAX_LENGTH
+        max_length=254
     )
     username = serializers.CharField(
-        max_length=EMAIL_MAX_LENGTH,
+        max_length=254,
         validators=[validate_username]
     )

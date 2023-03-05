@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework.routers import SimpleRouter
 
-from api.views import UserViewSet, signup_user, get_token
+from api.views import UserViewSet, get_token, signup_user
 
 router = SimpleRouter()
 
