@@ -115,6 +115,17 @@ class GenreTitle(models.Model):
 
 class Review(models.Model):
     """Модель отзывов о произведении."""
+    
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+        verbose_name='Произведение',
+        related_name='reviews'
+    )
+    score = models.PositiveSmallIntegerField(
+        default=1,
+        verbose_name='Рейтинг'
+    )
 
 
 class Comment(models.Model):
