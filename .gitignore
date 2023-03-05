@@ -150,4 +150,6 @@ media/
 
  pyproject.toml
 Makefile
+*.isort.cfg
 pyproject.toml
+
