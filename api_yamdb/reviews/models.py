@@ -1,5 +1,3 @@
-import re
-
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -7,11 +5,14 @@ from django.db import models
 from reviews.validator import validator_year
 
 
+from reviews.validators import validate_username
+
 ADMIN = 'admin'
 MODERATOR = 'moderator'
 USER = 'user'
 
 ROLE_CHOICES = [(ADMIN, ADMIN), (MODERATOR, MODERATOR), (USER, USER), ]
+
 
 
 def validate_username(value):
@@ -75,6 +76,10 @@ class User(AbstractUser):
             self.role == ADMIN
             or self.is_superuser
         )
+    @property
+    def is_user(self):
+        return self.role == USER
+
     @property
     def is_user(self):
         return self.role == USER

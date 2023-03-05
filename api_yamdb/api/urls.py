@@ -3,7 +3,7 @@ from django.urls import include, path
 from rest_framework.routers import SimpleRouter
 
 from .views import (CategoryViewSet, CommentViewSet, GenreViewSet,
-                    TitleViewSet, UserViewSet)
+                    TitleViewSet, UserViewSet, get_token, signup_user)
 
 app_name = 'api'
 
@@ -23,10 +23,12 @@ router_v1.register(
 router_v1.register('categories', CategoryViewSet, basename='category')
 router_v1.register('titles', TitleViewSet, basename='title')
 
-auth_patterns = []
+auth_patterns = [
+    path('signup/', signup_user),
+    path('token/', get_token),
+]
 
 urlpatterns = [
     path('v1/auth/', include(auth_patterns)),
     path('v1/', include(router_v1.urls), name='api'),
 ]
-
