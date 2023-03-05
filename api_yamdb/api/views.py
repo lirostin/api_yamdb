@@ -1,9 +1,11 @@
 from rest_framework import filters, viewsets
 
-from reviews.models import User
 from api.serializers import UserSerializer
+from reviews.models import User
+
 
 class UserViewSet(viewsets.ModelViewSet):
+    """ Пользователь."""
     http_method_names = ['get', 'post', 'head', 'delete', 'patch']
     queryset = User.objects.all()
     permission_classes = ()
