@@ -8,8 +8,8 @@ from api.filters import TitleFilter
 from api.mixins import ListCreateDestroyViewSet
 from api.permissions import IsAdminUserOrReadOnly
 from api.serializers import (CategorySerializer, GenreSerializer,
-                             ReadOnlyTitleSerializer, TitleSerializer)
-from reviews.models import Category, Genre, Title
+                             ReadOnlyTitleSerializer, TitleSerializer, CommentSerializers)
+from reviews.models import Category, Genre, Title, Review
 
 
 class CategoryViewSet(ListCreateDestroyViewSet):
@@ -36,7 +36,11 @@ class GenreViewSet(ListCreateDestroyViewSet):
 
 class TitleViewSet(viewsets.ModelViewSet):
     """ Вывод списка всех произведений. """
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/develop
     queryset = Title.objects.all().annotate(
         Avg('reviews__score')
     ).order_by('name')
