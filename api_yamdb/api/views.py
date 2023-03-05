@@ -1,4 +1,3 @@
-
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -7,10 +6,20 @@ from rest_framework import filters, viewsets
 from api.filters import TitleFilter
 from api.mixins import ListCreateDestroyViewSet
 from api.permissions import IsAdminUserOrReadOnly
-from api.serializers import (CategorySerializer, GenreSerializer,
+from api.serializers import (CategorySerializer, GenreSerializer, UserSerializer,
                              ReadOnlyTitleSerializer, TitleSerializer, CommentSerializers)
-from reviews.models import Category, Genre, Title, Review
+from reviews.models import Category, Genre, Title, Review, User
 
+
+class UserViewSet(viewsets.ModelViewSet):
+    """ Пользователь."""
+    http_method_names = ['get', 'post', 'head', 'delete', 'patch']
+    queryset = User.objects.all()
+    permission_classes = ()
+    serializer_class = UserSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('username',)
+    lookup_field = 'username'
 
 class CategoryViewSet(ListCreateDestroyViewSet):
     """ Вывод списка всех категорий. """
