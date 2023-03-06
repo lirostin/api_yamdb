@@ -192,17 +192,37 @@ class GenreTitle(models.Model):
 
 class Review(models.Model):
     """Модель отзывов о произведении."""
-    
+    text = models.TextField(verbose_name='Текст')
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
         verbose_name='Произведение',
         related_name='reviews'
     )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='Пользователь',
+        related_name='reviews'
+    )
     score = models.PositiveSmallIntegerField(
         default=1,
         verbose_name='Рейтинг'
     )
+    pub_date = models.DateTimeField(
+        auto_now_add=True, verbose_name='Дата публикации отзыва'
+    )
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['author', 'title'],
+                                    name='unique_author_title')
+        ]
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
+        ordering = ('-pub_date',)
+
+    def __str__(self):
+        return f'Отзыв {self.author.username} на {self.title.name}'
 
 
 class Comment(models.Model):
