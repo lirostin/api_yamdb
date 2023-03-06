@@ -41,10 +41,20 @@ class TitleAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-admin.site.register(Review)
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'title',
+        'author',
+        'score',
+        'pub_date',
+    )
+    list_filter = ('author',)
+    empty_value_display = '-пусто-'
+
+
 admin.site.register(User)
-admin.site.register(Comment)
-admin.site.register(GenreTitle)
 
 
 # @admin.register(Comment)
