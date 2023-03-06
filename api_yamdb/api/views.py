@@ -20,6 +20,7 @@ from api.serializers import (CategorySerializer, CommentSerializers,
                              GenreSerializer, ReadOnlyTitleSerializer,
                              ReviewSerializer, SignUpUserSerializer,
                              TitleSerializer, TokenSerializer, UserSerializer)
+
 from reviews.models import Category, Genre, Review, Title, User
 
 
