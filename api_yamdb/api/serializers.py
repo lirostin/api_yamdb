@@ -166,10 +166,15 @@ class ReviewSerializer(serializers.ModelSerializer):
         slug_field='username',
         read_only=True,
     )
+    title = serializers.SlugRelatedField(
+        slug_field='id',
+        many=False,
+        read_only=True,
+    )
 
     class Meta:
         model = Review
-        fields = ('id', 'text', 'author', 'score', 'pub_date')
+        fields = ('id', 'text', 'author', 'score', 'pub_date', 'title')
 
     def validate(self, data):
         request = self.context['request']
@@ -181,3 +186,9 @@ class ReviewSerializer(serializers.ModelSerializer):
                 'Нельзя делать 2 отзыва на одно и тоже произведение.'
             )
         return data
+    
+    def validate_score(self, value):
+        """Проверка, что оценка в диапазоне от 1 до 10."""
+        if not 1 <= value <= 10:
+            raise serializers.ValidationError('Оценка может быть от 1 до 10!')
+        return value

@@ -2,6 +2,7 @@ import re
 
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from reviews.validator import validator_year
@@ -12,7 +13,6 @@ MODERATOR = 'moderator'
 USER = 'user'
 
 ROLE_CHOICES = [(ADMIN, ADMIN), (MODERATOR, MODERATOR), (USER, USER), ]
-
 
 
 def validate_username(value):
@@ -207,6 +207,10 @@ class Review(models.Model):
     )
     score = models.PositiveSmallIntegerField(
         default=1,
+        validators=[
+            MinValueValidator(1, 'Значение рейтинга не может быть ниже 1.'),
+            MaxValueValidator(10, 'Значение рейтинга не может быть выше 10.')
+        ],
         verbose_name='Рейтинг'
     )
     pub_date = models.DateTimeField(
