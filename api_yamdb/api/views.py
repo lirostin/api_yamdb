@@ -19,7 +19,7 @@ from api.permissions import (IsAdmin, IsAdminUserOrReadOnly,
 from api.serializers import (CategorySerializer, CommentSerializers,
                              GenreSerializer, ReadOnlyTitleSerializer,
                              SignUpUserSerializer, TitleSerializer,
-                             TokenSerializer, UserSerializer)
+                             TokenSerializer, UserSerializer, ReviewSerializer)
 from reviews.models import Category, Genre, Review, Title, User
 
 
@@ -167,3 +167,17 @@ class CommentViewSet(viewsets.ModelViewSet):
             title_id=self.kwargs.get('title_id')
         )
         serializer.save(author=self.request.user, review=review)
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    """Вывод отзывов."""
+
+    serializer_class = ReviewSerializer
+    permission_classes = (IsAuthorModerAdminOrReadOnly,)
+
+    def get_queryset(self):
+        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
+        return title.reviews.all()
+
+    def perform_create(self, serializer):
+        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
+        serializer.save(author=self.request.user, title=title)

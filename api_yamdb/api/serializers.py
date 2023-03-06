@@ -1,7 +1,9 @@
+from django.shortcuts import get_object_or_404
+from django.forms import ValidationError
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 
-from reviews.models import (Category, Comment, Genre, Title, User,
+from reviews.models import (Category, Comment, Genre, Title, User, Review,
                             validate_username)
 from reviews.validator import validator_year
 
@@ -156,3 +158,26 @@ class CommentSerializers(serializers.ModelSerializer):
             'pub_date'
         )
         read_only_fields = ('author', )
+
+class ReviewSerializer(serializers.ModelSerializer):
+    """Серилизатор для отзывов."""
+
+    author = serializers.SlugRelatedField(
+        slug_field='username',
+        read_only=True,
+    )
+
+    class Meta:
+        model = Review
+        fields = ('id', 'text', 'author', 'score', 'pub_date')
+
+    def validate(self, data):
+        request = self.context['request']
+        title_id = self.context['view'].kwargs.get('title_id')
+        title = get_object_or_404(Title, pk=title_id)
+        if (request.method == 'POST'
+                and request.user.reviews.filter(title=title).exists()):
+            raise ValidationError(
+                'Нельзя делать 2 отзыва на одно и тоже произведение.'
+            )
+        return data
