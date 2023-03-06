@@ -6,13 +6,13 @@ from reviews.models import User
 
 
 def get_confirmation_code():
-    """Генерирует confirmation_code."""
+    """Генерирует код подтверждения."""
     chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*'
     return get_random_string(20, chars)
 
 
 def send_confirmation_code(request):
-    """Отправляет сгенерированный confirmation_code пользователю."""
+    """Отправляет код подтверждения пользователю."""
     user = get_object_or_404(
         User,
         username=request.data.get('username'),

@@ -2,30 +2,28 @@ from rest_framework import permissions
 
 
 class IsAdminOrReadOnly(permissions.BasePermission):
-    """Даёт доступ неадмину только к GET/OPTIONS/HEAD."""
+    """Доступ для пользователей с ролью гость. Любому для чтения"""
 
-    message = 'Данный запрос недоступен для вас.'
+    message = 'По данному запросу нет доступа.'
 
     def has_permission(self, request, view):
-        """Проверка на запросы к объекту
-        Для безопасных методов всегда True."""
         return (request.method in permissions.SAFE_METHODS
                 or request.user.is_admin)
 
 
 class IsAdminUser(permissions.BasePermission):
-    """Доступ только для пльзователей с ролью администратора."""
+    """Доступ для пользователей с ролью администратора."""
 
-    message = 'Данный запрос недоступен для вас.'
+    message = 'По данному запросу нет доступа.'
 
     def has_permission(self, request, view):
         return request.user.is_admin
 
 
 class IsAuthorOrModerAdminPermission(permissions.BasePermission):
-    """Даёт доступ неадмину/немодеру/неавтору только к GET/OPTIONS/HEAD."""
+    """Доступ для пользователя с ролью админ, модер, автор."""
 
-    message = 'Данный запрос недоступен для вас.'
+    message = 'По данному запросу нет доступа.'
 
     def has_object_permission(self, request, view, obj):
         return (

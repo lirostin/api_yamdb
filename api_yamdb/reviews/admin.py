@@ -111,6 +111,6 @@ class UserAdmin(admin.ModelAdmin):
         'last_name',
         'confirmation_code',
     )
-    search_fields = ('username', 'role',)
+    search_fields = ('username', 'role')
     list_filter = ('username',)
     empty_value_display = '-пусто-'

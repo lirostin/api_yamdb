@@ -36,7 +36,7 @@ from reviews.models import Category, Comment, Genre, Review, Title, User
 
 
 class UserViewSet(ModelViewSet):
-    """Вьюсет для модели User."""
+    """Обработка модели User."""
     queryset = User.objects.all()
     serializer_class = UserSerializer
     lookup_field = 'username'
@@ -47,7 +47,7 @@ class UserViewSet(ModelViewSet):
 
 
 class UsersMeView(APIView):
-    """Вью для эндпоинта users/me/."""
+    """Обработка эндпоинта users/me/."""
 
     permission_classes = (IsAuthenticated,)
 
@@ -67,13 +67,13 @@ class UsersMeView(APIView):
 
 
 class YamdbTokenObtainPairView(TokenObtainPairView):
-    """Вью для получения токена"""
+    """получение токена"""
 
     serializer_class = YamdbTokenObtainPairSerializer
 
 
 class SignupView(APIView):
-    """Вью для регистрации пользователей."""
+    """Регистрация пользователя."""
 
     permission_classes = (AllowAny,)
 
@@ -102,7 +102,7 @@ class CreateListDestroyViewSet(mixins.CreateModelMixin,
 
 
 class CategoryViewSet(CreateListDestroyViewSet):
-    """Вьюсет для модели Category."""
+    """Обработчик модели категорий."""
 
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -113,7 +113,7 @@ class CategoryViewSet(CreateListDestroyViewSet):
 
 
 class GenreViewSet(CreateListDestroyViewSet):
-    """Вьюсет для модели Genre."""
+    """Обработчик модели жанров."""
 
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
@@ -124,7 +124,7 @@ class GenreViewSet(CreateListDestroyViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    """Вьюсет для модели Title."""
+    """Обработчик модели произведений."""
 
     queryset = Title.objects.annotate(
         rating=Avg('reviews__score'),
@@ -143,7 +143,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
-    """Вьюсет для модели Review."""
+    """Обработчик модели отзывов."""
 
     serializer_class = ReviewSerializer
     permission_classes = (
@@ -163,7 +163,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
-    """Вьюсет для модели Comment."""
+    """Обработчик модели с комментариями."""
 
     serializer_class = CommentSerializer
     permission_classes = (
@@ -172,7 +172,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     )
 
     def perform_create(self, serializer):
-        """Создание нового коммента."""
+        """Новый комментарий."""
         title_id = self.kwargs.get('title_id')
         title = get_object_or_404(Title, id=title_id)
         review_id = self.kwargs.get('review_id')
@@ -180,7 +180,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user, review=review)
 
     def get_queryset(self):
-        """Получение кверисета."""
+        """Получение queryset."""
         title_id = self.kwargs.get('title_id')
         title = get_object_or_404(Title, id=title_id)
         review_id = self.kwargs.get('review_id')
