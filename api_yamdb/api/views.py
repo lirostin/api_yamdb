@@ -131,7 +131,7 @@ class GenreViewSet(ListCreateDestroyViewSet):
 
 class TitleViewSet(viewsets.ModelViewSet):
     """ Вывод списка всех произведений. """
-    
+
     queryset = Title.objects.all().annotate(
         Avg('reviews__score')
     ).order_by('name')
