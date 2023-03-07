@@ -1,88 +1,64 @@
-import re
-
-from django.contrib.auth.models import AbstractUser
-from django.core.exceptions import ValidationError
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from reviews.validator import validator_year
-from reviews.validators import validate_username
-
-ADMIN = 'admin'
-MODERATOR = 'moderator'
-USER = 'user'
-
-ROLE_CHOICES = [(ADMIN, ADMIN), (MODERATOR, MODERATOR), (USER, USER), ]
 
 
-def validate_username(value):
-    """Проверка на недопустимые username."""
-    if value.lower() == 'me':
-        raise ValidationError('"me" - Недопустимое имя пользователя.')
+class UserRole(models.TextChoices):
+    ADMIN = 'admin'
+    MODERATOR = 'moderator'
+    USER = 'user'
 
-    if re.search(r'^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$', value) is None:
-        raise ValidationError(
-            (f'Недопустимый набор символов: "{value}"'),
-            params={'value': value},
-        )
+
+class UserManagerYaMDB(UserManager):
+    def create_superuser(self, username, email=None,
+                         password=None, **extra_fields):
+        extra_fields.setdefault('role', UserRole.ADMIN)
+        return super().create_superuser(username, email,
+                                        password, **extra_fields)
 
 
 class User(AbstractUser):
-    """Абстрактная модель пользователя."""
-    username = models.CharField(
-        max_length=150,
-        unique=True,
-        blank=False,
-        validators=[validate_username]
+    objects = UserManagerYaMDB()
+
+    bio = models.TextField(
+        verbose_name='Биография',
+        blank=True,
+    )
+    role = models.CharField(
+        max_length=9,
+        choices=UserRole.choices,
+        default=UserRole.USER,
+        verbose_name='Роль',
     )
     email = models.EmailField(
         max_length=254,
         unique=True,
-        blank=False
+        verbose_name='E-mail',
     )
-    first_name = models.CharField(
-        max_length=150,
-        null=True,
-        blank=True
-    )
-    last_name = models.CharField(
-        max_length=150,
-        null=True,
-        blank=True
-    )
-    bio = models.TextField(
-        verbose_name='Биография',
+    confirmation_code = models.CharField(
+        max_length=20,
         blank=True,
-        null=True
-    )
-    role = models.CharField(
-        max_length=max(len(role) for role, _ in ROLE_CHOICES),
-        verbose_name='Роль',
-        choices=ROLE_CHOICES,
-        default='user'
+        verbose_name='Код подтверждения',
     )
 
     class Meta:
-        verbose_name = 'Пользователь',
+        ordering = ('id',)
+        verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-    
-    @property
-    def is_moderator(self):
-        return self.role == MODERATOR
 
     @property
     def is_admin(self):
         return (
-            self.role == ADMIN
+            self.role == UserRole.ADMIN
+            or self.is_staff
             or self.is_superuser
         )
-    @property
-    def is_user(self):
-        return self.role == USER
 
     @property
-    def is_user(self):
-        return self.role == USER
+    def is_moderator(self):
+        return self.role == UserRole.MODERATOR
 
 
 class Category(models.Model):
@@ -90,12 +66,13 @@ class Category(models.Model):
 
     name = models.CharField(
         'имя категории',
-        max_length=50
+        unique=True,
+        max_length=250,
     )
     slug = models.SlugField(
         'слаг категории',
         unique=True,
-        db_index=True
+        db_index=True,
     )
 
     class Meta:
@@ -104,6 +81,7 @@ class Category(models.Model):
         verbose_name_plural = 'Категории'
 
     def __str__(self):
+        """Возвращает имя категории."""
         return self.name
 
 
@@ -112,13 +90,13 @@ class Genre(models.Model):
 
     name = models.CharField(
         'имя жанра',
-        max_length=50
+        max_length=250,
     )
     slug = models.SlugField(
         'cлаг жанра',
         unique=True,
         max_length=50,
-        db_index=True
+        db_index=True,
     )
 
     class Meta:
@@ -127,6 +105,7 @@ class Genre(models.Model):
         verbose_name_plural = 'Жанры'
 
     def __str__(self):
+        """Возвращает имя жанра."""
         return self.name
 
 
@@ -139,7 +118,7 @@ class Title(models.Model):
     )
     year = models.IntegerField(
         'год выпуска',
-        validators=[validator_year], 
+        validators=[validator_year],
     )
     category = models.ForeignKey(
         Category,
@@ -147,17 +126,18 @@ class Title(models.Model):
         related_name='titles',
         verbose_name='категория',
         null=True,
+        blank=True,
     )
     description = models.TextField(
         'описание',
         null=True,
-        blank=True
+        blank=True,
     )
     genre = models.ManyToManyField(
         Genre,
         related_name='titles',
         blank=True,
-        verbose_name='жанр'
+        verbose_name='жанр',
     )
 
     class Meta:
@@ -166,6 +146,7 @@ class Title(models.Model):
         verbose_name_plural = 'Произведения'
 
     def __str__(self):
+        """Возвращает название призведения."""
         return self.name
 
 
@@ -174,58 +155,73 @@ class GenreTitle(models.Model):
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
-        verbose_name=('произведение')
+        verbose_name=('произведение'),
     )
     genre = models.ForeignKey(
         Genre,
         on_delete=models.CASCADE,
-        verbose_name=('жанр')
+        verbose_name=('жанр'),
     )
 
     def __str__(self):
+        """Возвращает связку жанр - произведение."""
         return f'{self.genre} {self.title}'
 
     class Meta:
         verbose_name = 'Произведение и жанр'
         verbose_name_plural = 'Произведения и жанры'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('genre', 'title'),
+                name='unique_genre_title',
+            ),
+        )
+
+    def __str__(self):
+        """Возвращает связку произведение - жанр."""
+        return f'{self.title} {self.genre}'
 
 
 class Review(models.Model):
     """Модель отзывов о произведении."""
+
     text = models.TextField(verbose_name='Текст')
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
         verbose_name='Произведение',
-        related_name='reviews'
+        related_name='reviews',
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
-        related_name='reviews'
+        related_name='reviews',
     )
     score = models.PositiveSmallIntegerField(
         default=1,
         validators=[
             MinValueValidator(1, 'Значение рейтинга не может быть ниже 1.'),
-            MaxValueValidator(10, 'Значение рейтинга не может быть выше 10.')
+            MaxValueValidator(10, 'Значение рейтинга не может быть выше 10.'),
         ],
-        verbose_name='Рейтинг'
+        verbose_name='Рейтинг',
     )
     pub_date = models.DateTimeField(
-        auto_now_add=True, verbose_name='Дата публикации отзыва'
+        auto_now_add=True, verbose_name='Дата публикации отзыва',
     )
+
     class Meta:
+        """Возвращает отзыв пользователя на произведение."""
         constraints = [
             models.UniqueConstraint(fields=['author', 'title'],
-                                    name='unique_author_title')
+                                    name='unique_author_title'),
         ]
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
         ordering = ('-pub_date',)
 
     def __str__(self):
+        """Возвращает связку отзыв пользователя на произведение."""
         return f'Отзыв {self.author.username} на {self.title.name}'
 
 
@@ -237,14 +233,14 @@ class Comment(models.Model):
         Review,
         on_delete=models.CASCADE,
         verbose_name='Отзыв',
-        related_name='comments'
+        related_name='comments',
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         verbose_name='Автор комментария',
         related_name='comments',
-        null=True
+        null=True,
     )
     pub_date = models.DateTimeField(
         verbose_name='Дата публикации комментария',
@@ -257,4 +253,5 @@ class Comment(models.Model):
         ordering = ('-pub_date',)
 
     def __str__(self):
+        """Возвращает текст комментария."""
         return self.text

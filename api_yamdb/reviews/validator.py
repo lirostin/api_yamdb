@@ -10,6 +10,6 @@ def validator_year(value):
     if value > todays_year:
         raise ValidationError(
             f'ОШИБКА: год выпуска {value} больше '
-            f'чем текущий {todays_year}'
+            f'чем текущий {todays_year}',
         )
     return value

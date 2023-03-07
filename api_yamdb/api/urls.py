@@ -1,40 +1,55 @@
 from django.urls import include, path
-from rest_framework.routers import SimpleRouter
+from rest_framework import routers
 
-from .views import (CategoryViewSet, CommentViewSet, GenreViewSet,
-                    ReviewViewSet, TitleViewSet, UserViewSet, get_token,
-                    signup_user)
-from api.views import UserViewSet
-
-app_name = 'api'
-
-router_v1 = SimpleRouter()
-
-router_v1.register(
-    'users',
-    UserViewSet,
-    basename='users'
-)
-router_v1.register('genres', GenreViewSet, basename='genre')
-router_v1.register(
-    r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments',
+from api.views import (
+    CategoryViewSet,
     CommentViewSet,
-    basename='comments'
+    GenreViewSet,
+    ReviewViewSet,
+    SignupView,
+    TitleViewSet,
+    UsersMeView,
+    UserViewSet,
+    YamdbTokenObtainPairView,
 )
-router_v1.register('categories', CategoryViewSet, basename='category')
-router_v1.register('titles', TitleViewSet, basename='title')
-router_v1.register(
+
+router = routers.DefaultRouter()
+
+router.register(
+    r'users',
+    UserViewSet,
+    basename='user',
+)
+router.register(
+    r'categories',
+    CategoryViewSet,
+    basename='category',
+)
+router.register(
+    r'genres',
+    GenreViewSet,
+    basename='genre',
+)
+router.register(
+    r'titles',
+    TitleViewSet,
+    basename='title',
+)
+router.register(
     r'titles/(?P<title_id>\d+)/reviews',
     ReviewViewSet,
-    basename='reviews'
+    basename='review',
+)
+router.register(
+    r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments',
+    CommentViewSet,
+    basename='comment',
 )
 
-auth_patterns = [
-    path('signup/', signup_user),
-    path('token/', get_token),
-]
-
 urlpatterns = [
-    path('v1/auth/', include(auth_patterns)),
-    path('v1/', include(router_v1.urls), name='api'),
+    path('v1/auth/token/', YamdbTokenObtainPairView.as_view(),
+         name='create_token'),
+    path('v1/auth/signup/', SignupView.as_view(), name='signup'),
+    path('v1/users/me/', UsersMeView.as_view(), name='me'),
+    path('v1/', include(router.urls)),
 ]
