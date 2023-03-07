@@ -257,7 +257,8 @@ https://github.com/Aleks-go
  - категорий,
  - жанров;
  - реализовал импорт данных из `csv` файлов.
-https://github.com/SergeyPegas
+ https://github.com/SergeyPegas
+
 
 
 
