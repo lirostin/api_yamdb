@@ -52,13 +52,11 @@ class UsersMeView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        """Метод GET."""
         me = get_object_or_404(User, username=request.user.username)
         serializer = UserSerializer(me)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request):
-        """Метод PATCH."""
         me = get_object_or_404(User, username=request.user.username)
         serializer = UsersMeSerializer(me, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -67,7 +65,7 @@ class UsersMeView(APIView):
 
 
 class YamdbTokenObtainPairView(TokenObtainPairView):
-    """получение токена"""
+    """Получение токена"""
 
     serializer_class = YamdbTokenObtainPairSerializer
 
@@ -78,7 +76,6 @@ class SignupView(APIView):
     permission_classes = (AllowAny,)
 
     def post(self, request):
-        """Метод POST."""
         serializer = SignupSerializer(data=request.data)
         if User.objects.filter(username=request.data.get('username'),
                                email=request.data.get('email')).exists():
@@ -172,7 +169,6 @@ class CommentViewSet(viewsets.ModelViewSet):
     )
 
     def perform_create(self, serializer):
-        """Новый комментарий."""
         title_id = self.kwargs.get('title_id')
         title = get_object_or_404(Title, id=title_id)
         review_id = self.kwargs.get('review_id')
@@ -180,7 +176,6 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user, review=review)
 
     def get_queryset(self):
-        """Получение queryset."""
         title_id = self.kwargs.get('title_id')
         title = get_object_or_404(Title, id=title_id)
         review_id = self.kwargs.get('review_id')

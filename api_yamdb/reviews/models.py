@@ -1,5 +1,4 @@
 from django.contrib.auth.models import AbstractUser, UserManager
-
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
@@ -45,6 +44,7 @@ class User(AbstractUser):
     )
 
     class Meta:
+        ordering = ('id',)
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
@@ -164,6 +164,7 @@ class GenreTitle(models.Model):
     )
 
     def __str__(self):
+        """Возвращает связку жанр - произведение."""
         return f'{self.genre} {self.title}'
 
     class Meta:
@@ -177,6 +178,7 @@ class GenreTitle(models.Model):
         )
 
     def __str__(self):
+        """Возвращает связку произведение - жанр."""
         return f'{self.title} {self.genre}'
 
 
@@ -209,6 +211,7 @@ class Review(models.Model):
     )
 
     class Meta:
+        """Возвращает отзыв пользователя на произведение."""
         constraints = [
             models.UniqueConstraint(fields=['author', 'title'],
                                     name='unique_author_title'),
@@ -218,6 +221,7 @@ class Review(models.Model):
         ordering = ('-pub_date',)
 
     def __str__(self):
+        """Возвращает связку отзыв пользователя на произведение."""
         return f'Отзыв {self.author.username} на {self.title.name}'
 
 
