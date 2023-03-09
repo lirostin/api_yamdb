@@ -33,7 +33,7 @@ class User(AbstractUser):
         verbose_name='Роль',
     )
     email = models.EmailField(
-        max_length=254,
+        max_length=253,
         unique=True,
         verbose_name='E-mail',
     )
@@ -67,12 +67,12 @@ class Category(models.Model):
     name = models.CharField(
         'имя категории',
         unique=True,
-        max_length=250,
+        max_length=256,
     )
     slug = models.SlugField(
         'слаг категории',
+        max_length=50,
         unique=True,
-        db_index=True,
     )
 
     class Meta:
@@ -90,13 +90,12 @@ class Genre(models.Model):
 
     name = models.CharField(
         'имя жанра',
-        max_length=250,
+        max_length=256,
     )
     slug = models.SlugField(
         'cлаг жанра',
         unique=True,
         max_length=50,
-        db_index=True,
     )
 
     class Meta:
@@ -114,11 +113,12 @@ class Title(models.Model):
 
     name = models.CharField(
         'название произведения',
-        max_length=100,
+        max_length=256,
     )
     year = models.IntegerField(
         'год выпуска',
         validators=[validator_year],
+        db_index=True,
     )
     category = models.ForeignKey(
         Category,
@@ -150,36 +150,36 @@ class Title(models.Model):
         return self.name
 
 
-class GenreTitle(models.Model):
-    """Модель связи жанра и произведения."""
-    title = models.ForeignKey(
-        Title,
-        on_delete=models.CASCADE,
-        verbose_name=('произведение'),
-    )
-    genre = models.ForeignKey(
-        Genre,
-        on_delete=models.CASCADE,
-        verbose_name=('жанр'),
-    )
+# class GenreTitle(models.Model):
+#     """Модель связи жанра и произведения."""
+#     title = models.ForeignKey(
+#         Title,
+#         on_delete=models.CASCADE,
+#         verbose_name=('произведение'),
+#     )
+#     genre = models.ForeignKey(
+#         Genre,
+#         on_delete=models.CASCADE,
+#         verbose_name=('жанр'),
+#     )
 
-    def __str__(self):
-        """Возвращает связку жанр - произведение."""
-        return f'{self.genre} {self.title}'
+#     def __str__(self):
+#         """Возвращает связку жанр - произведение."""
+#         return f'{self.genre} {self.title}'
 
-    class Meta:
-        verbose_name = 'Произведение и жанр'
-        verbose_name_plural = 'Произведения и жанры'
-        constraints = (
-            models.UniqueConstraint(
-                fields=('genre', 'title'),
-                name='unique_genre_title',
-            ),
-        )
+#     class Meta:
+#         verbose_name = 'Произведение и жанр'
+#         verbose_name_plural = 'Произведения и жанры'
+#         constraints = (
+#             models.UniqueConstraint(
+#                 fields=('genre', 'title'),
+#                 name='unique_genre_title',
+#             ),
+#         )
 
-    def __str__(self):
-        """Возвращает связку произведение - жанр."""
-        return f'{self.title} {self.genre}'
+#     def __str__(self):
+#         """Возвращает связку произведение - жанр."""
+#         return f'{self.title} {self.genre}'
 
 
 class Review(models.Model):
