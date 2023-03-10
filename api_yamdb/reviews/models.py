@@ -150,38 +150,6 @@ class Title(models.Model):
         return self.name
 
 
-# class GenreTitle(models.Model):
-#     """Модель связи жанра и произведения."""
-#     title = models.ForeignKey(
-#         Title,
-#         on_delete=models.CASCADE,
-#         verbose_name=('произведение'),
-#     )
-#     genre = models.ForeignKey(
-#         Genre,
-#         on_delete=models.CASCADE,
-#         verbose_name=('жанр'),
-#     )
-
-#     def __str__(self):
-#         """Возвращает связку жанр - произведение."""
-#         return f'{self.genre} {self.title}'
-
-#     class Meta:
-#         verbose_name = 'Произведение и жанр'
-#         verbose_name_plural = 'Произведения и жанры'
-#         constraints = (
-#             models.UniqueConstraint(
-#                 fields=('genre', 'title'),
-#                 name='unique_genre_title',
-#             ),
-#         )
-
-#     def __str__(self):
-#         """Возвращает связку произведение - жанр."""
-#         return f'{self.title} {self.genre}'
-
-
 class Review(models.Model):
     """Модель отзывов о произведении."""
 
