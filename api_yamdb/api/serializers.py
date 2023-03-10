@@ -12,6 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
     """Сериализатор модели User."""
 
     class Meta:
+        model = User
         fields = (
             'username',
             'email',
@@ -20,7 +21,6 @@ class UserSerializer(serializers.ModelSerializer):
             'bio',
             'role',
         )
-        model = User
 
 
 class UsersMeSerializer(UserSerializer):
@@ -29,6 +29,7 @@ class UsersMeSerializer(UserSerializer):
     role = serializers.CharField(read_only=True)
 
     class Meta:
+        model = User
         fields = (
             'username',
             'email',
@@ -37,7 +38,6 @@ class UsersMeSerializer(UserSerializer):
             'bio',
             'role',
         )
-        model = User
 
 
 class YamdbTokenObtainPairSerializer(serializers.Serializer):
@@ -64,8 +64,8 @@ class SignupSerializer(serializers.ModelSerializer):
         return value
 
     class Meta:
-        fields = ('username', 'email')
         model = User
+        fields = ('username', 'email')
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -80,8 +80,8 @@ class CategorySerializer(serializers.ModelSerializer):
         return value
 
     class Meta:
-        fields = ('name', 'slug')
         model = Category
+        fields = ('name', 'slug')
         lookup_field = 'slug'
 
 
@@ -97,8 +97,8 @@ class GenreSerializer(serializers.ModelSerializer):
         return value
 
     class Meta:
-        fields = ('name', 'slug')
         model = Genre
+        fields = ('name', 'slug')
         lookup_field = 'slug'
 
 
@@ -207,10 +207,10 @@ class CommentSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
+        model = Comment
         fields = (
             'id',
             'text',
             'author',
             'pub_date',
         )
-        model = Comment
