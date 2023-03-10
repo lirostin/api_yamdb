@@ -28,6 +28,17 @@ class UsersMeSerializer(UserSerializer):
 
     role = serializers.CharField(read_only=True)
 
+    class Meta:
+        fields = (
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'bio',
+            'role',
+        )
+        model = User
+
 
 class YamdbTokenObtainPairSerializer(serializers.Serializer):
     """Сериализатор получения токена."""
