@@ -144,11 +144,6 @@ class ReviewSerializer(serializers.ModelSerializer):
     """Сериализатор для модели отзывов."""
 
     author = serializers.StringRelatedField(read_only=True)
-    title = serializers.SlugRelatedField(
-        slug_field='id',
-        many=False,
-        read_only=True,
-    )
 
     class Meta:
         model = Review
@@ -160,6 +155,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             'pub_date',
             'title',
         )
+        read_only_fields = ('title',)
 
     def validate(self, data):
         """Запрет оставлять повторные отзывы"""
