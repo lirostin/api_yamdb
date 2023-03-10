@@ -139,6 +139,18 @@ class TitleWriteSerializer(TitleSerializer):
         many=True,
     )
 
+    class Meta:
+        model = Title
+        fields = (
+            'id',
+            'name',
+            'year',
+            'description',
+            'rating',
+            'genre',
+            'category',
+        )
+
 
 class ReviewSerializer(serializers.ModelSerializer):
     """Сериализатор для модели отзывов."""

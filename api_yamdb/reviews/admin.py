@@ -1,8 +1,7 @@
 from django.contrib import admin
 from django.db.models import Avg
 
-from reviews.models import (Category, Comment, Genre, GenreTitle, Review,
-                            Title, User)
+from reviews.models import (Category, Comment, Genre, Review, Title, User)
 
 
 @admin.register(Category)
@@ -29,12 +28,6 @@ class GenreAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-class GenreInline(admin.TabularInline):
-    """Инлайн для работы с жанрами произведения в админке."""
-    model = GenreTitle
-    extra = 2
-
-
 @admin.register(Title)
 class TitleAdmin(admin.ModelAdmin):
     list_display = (
@@ -45,29 +38,16 @@ class TitleAdmin(admin.ModelAdmin):
         'category',
         'get_rating',
     )
-    inlines = (
-        GenreInline,
-    )
+
     empty_value_display = 'значение отсутствует'
     list_filter = ('name',)
 
     def get_rating(self, object):
         """Вычисляет рейтинг произведения."""
-        rating = object.reviews.aggregate(average_score=Avg('score'))
-        return round(rating.get('average_score'), 1)
+        rating = object.reviews.aggregate(avg_score=Avg('score', default=0))
+        return round(rating.get('avg_score'), 1)
 
     get_rating.short_description = 'Рейтинг'
-
-
-@admin.register(GenreTitle)
-class GenreTitleAdmin(admin.ModelAdmin):
-    list_display = (
-        'pk',
-        'genre',
-        'title',
-    )
-    empty_value_display = 'значение отсутствует'
-    list_filter = ('genre',)
 
 
 @admin.register(Review)
